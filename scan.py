@@ -12,8 +12,13 @@ import requests
 import json
 
 # Constants
-NETWORK = '192.168.8.0/24'
 SERVER_URL = 'http://localhost:3000/update'
+
+
+# Network Ip
+#NETWORK = '192.168.8.0/24' # Hacker House
+NETWORK = '192.168.1.0/24' # Creamery
+
 
 # Scans the network for all devices
 # Returns the result in an array
@@ -50,7 +55,8 @@ def post_device_list(devices):
 
 # Run the Scan
 def run_scan():
-    devices = scan_for_devices()
+    #devices = scan_for_devices()
+    devices = ['192.168.1.1']
     post_device_list(devices)
 
 # Init
