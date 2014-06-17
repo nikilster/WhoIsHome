@@ -38,6 +38,9 @@ app.post('/update', function(req, res) {
         console.log(devices[i]);
 
     res.end();
+
+    //Send out to the sockets
+    io.emit(peopleEntered, devices);
 });
 
 http.listen(3000, function(){
