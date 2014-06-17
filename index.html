@@ -10,9 +10,16 @@
 
 
 $(document).ready(function () {
+  socket.on('peopleEntered', function(msg){
+      console.log("hello?");
+      $('#text').append($('<li>').text(msg));
+  });
+
     $("#randomize_button" ).click(function() {
-    	
+
+
 	});
+
 });
 
 
@@ -31,7 +38,7 @@ $(document).ready(function () {
     </style>
   </head>
   <body>
-    Who's Here?
+    <p id="text">Who's Here?</p>
 
 <button type="button" id="randomize_button">Change who's here!</button>
 
