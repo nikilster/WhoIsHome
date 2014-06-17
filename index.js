@@ -63,9 +63,7 @@ io.on('connection', function(socket){
 */
 app.post('/update', function(req, res) {
 
-    console.log("\n\n BEGINNING OF UPDATE");
-    console.log("\n\n ======== Previous People ========");
-    console.log(previousPeople);
+    console.log("\n\nBEGINNING OF UPDATE");
 
     //Get the devices
     var devices = JSON.parse(req.body.devices);
@@ -113,12 +111,11 @@ function getPeopleUpdate(devices)
     if(device in IP_TO_NAME) name = IP_TO_NAME[device];
 
     //Add the person
-    currentPeople.push(
-      {
-        KEY_NAME: name,
-        KEY_IP_ADDRESS: device,
-        KEY_STATUS: STATUS_HERE
-       });
+    var newPerson = {};
+    newPerson[KEY_NAME] = name;
+    newPerson[KEY_IP_ADDRESS] = device;
+    newPerson[KEY_STATUS] = STATUS_HERE;
+    currentPeople.push(newPerson);
   }
 
   //Set the status based off of the previous state
@@ -164,22 +161,20 @@ function addPeopleWhoLeft(currentPeople)
   //For each person who was here in the previous state
   for(var i=0; i<previousPeople.length; i++){
     
+    //Skip the peopel who left in the previous step
+    if(previousPeople[i][KEY_STATUS] == STATUS_JUST_LEFT) continue;
+
     //If the person is not here now, add them as just left
     if(!isHereNow(previousPeople[i], currentPeople))
     {
       //Question: is reference okay?
-      currentPeople.push({
-        KEY_NAME: previousPeople[i][KEY_NAME],
-        KEY_IP_ADDRESS: previousPeople[i][KEY_IP_ADDRESS],
-        KEY_STATUS: STATUS_JUST_LEFT
-      });
-
-      console.log("found person who left!");
-      console.log(previousPeople[i]);
-
+      var newPerson = {};
+      newPerson[KEY_NAME] = previousPeople[i][KEY_NAME];
+      newPerson[KEY_IP_ADDRESS] = previousPeople[i][KEY_IP_ADDRESS];
+      newPerson[KEY_STATUS] = STATUS_JUST_LEFT;
+      currentPeople.push(newPerson);
     }
-    else
-      console.log(previousPeople[i][KEY_NAME] + "is still here!")
+   
   }
 }
 
