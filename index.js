@@ -31,6 +31,7 @@ io.on('connection', function(socket){
 });
 
 app.post('/update', function(req, res) {
+
     console.log(req.body);
     var devices = JSON.parse(req.body.devices);
     console.log("number of devices: " + devices.length);
