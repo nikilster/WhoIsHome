@@ -31,10 +31,14 @@ io.on('connection', function(socket){
 });
 
 app.post('/update', function(req, res) {
-    console.log(req.body[0]);
-    io.emit('peopleEntered', req.body); 
-    res.send();  
-    // ...
+
+    console.log(req.body);
+    var devices = JSON.parse(req.body.devices);
+    console.log("number of devices: " + devices.length);
+    for(var i=0; i<devices.length; i++)
+        console.log(devices[i]);
+
+    res.end();
 });
 
 http.listen(3000, function(){
