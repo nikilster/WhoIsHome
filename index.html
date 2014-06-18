@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-
+    <title>Who is Home?</title>
   	<script src="/socket.io/socket.io.js"></script>
   	<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 
@@ -10,9 +10,28 @@
 
 
 $(document).ready(function () {
-  socket.on('peopleEntered', function(msg){
-      console.log("hello?");
-      $('#text').append($('<li>').text(msg));
+  socket.on('people', function(json){
+    console.log(json);
+      /*var json = [{"name":"Rob","status":1},
+                  {"name":"Nikil","status":2},
+                  {"name":"Joe","status":3}
+      ];*/
+      
+      $('#hereNow').html("");
+      $('.bg').html("");
+      for (var i=0; i<json.length; i++) {
+        var person = json[i];
+        if (person["status"] == 1) {
+          $('#activity').prepend($('<ul class="arrival">').text(person["name"] + " has arrived!"));
+          $('.bg').html('<div style="position: fixed; z-index: -99; width: 100%; height: 100%"><iframe frameborder="0" height="100%" width="100%" src="http://www.youtube.com/embed/UVRUxtPKK-w?autoplay=1&controls=0&showinfo=0&autohide=1"></iframe></div>');
+        }
+        if (person["status"] == 3) {
+          $('#activity').prepend($('<ul class="departure">').text(person["name"] + " has left."));
+        }
+        if (person["status"] == 1 || person["status"] == 2) {
+          $('#hereNow').append($('<ul>').text(person["name"]));
+        }
+      }
   });
 
     $("#randomize_button" ).click(function() {
@@ -25,22 +44,88 @@ $(document).ready(function () {
 
 
 </script>
-    <title>Socket.IO chat</title>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; }
+      body {
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+        font-weight: 200;
+      }
       form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
       form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
       form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
+
+
+      .bg {
+        background: url('/images/house_blur1.png');
+        background-size: cover;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        opacity: 50%;
+      }
+
+      .container {
+        width: 400px;
+        height: 400px;
+        margin: 0 auto;
+        padding-top: 50px;
+      }
+
+      .textContainer {
+        width: 100%;
+        height: 100%;
+        background-color:rgba(255,255,255,0.5);
+        text-align: center;
+        border-radius: 25px;
+        padding-top: 25px;
+        box-shadow: 1px 1px 200px -40px #000;
+      }
+
+      ul {
+      }
+
+      .arrival {
+        color: green;
+      }
+
+      .departure {
+        color: red;
+      }
+
+      H1 {
+        margin-top: 10px;
+        margin-bottom: 5px;
+        font-weight: 200;
+      }
+
+      H2 {
+        margin-top: 10px;
+        margin-bottom: 5px;
+        font-weight: 200;
+      }
+
     </style>
   </head>
   <body>
-    <p id="text">Who's Here?</p>
 
-<button type="button" id="randomize_button">Change who's here!</button>
+    <div class="bg"></div>
+    <div class="container">
+    <div class="textContainer">
+    <H1>Who is Home?</H1>
+    <H2>Recent Activity</H2>
+      
+    <div id="activity"></div>
+
+    <H2>Here Right Now</H2>
+    <div id="hereNow"></div>
+  </div>
+
+
+</div>
 
   </body>
 </html>
