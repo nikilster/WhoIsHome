@@ -87,6 +87,28 @@ app.post('/update', function(req, res) {
     io.emit('people', people);
 });
 
+/*
+  Simulates people coming into and out of the house
+*/
+app.get('/simulateFriends', function(req, res){
+
+  res.end();
+
+  var ALL_DEVICES = ['192.168.1.1','192.168.1.2','192.168.1.3'];
+  var selectedDevices = [];
+  for(var i=0; i<ALL_DEVICES.length; i++)
+    if(Math.random()<0.5)
+      selectedDevices.push(ALL_DEVICES[i]);
+    
+  //Get the list of people who are in the house
+  var people = getPeopleUpdate(selectedDevices);
+
+  console.log(people);
+  //Send out to the sockets
+  io.emit('people', people);
+});
+
+
 http.listen(3000, function(){
   console.log('listening on *:3000');
 });
